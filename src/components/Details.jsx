@@ -1,20 +1,22 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Recipecontext } from "../contexts/RecipeContext";
+import { toast } from "react-toastify";
 
 const Details = () => {
-    const recipe = {
-        id: "mAi6vrfNOmNe1LdgZ_MTd",
-        title: "Italian Wedding Soup ",
-        image: "https://png.pngtree.com/png-clipart/20231127/original/pngtree-high-angle-view-of-italian-wedding-soup-in-a-bowl-on-png-image_13728005.png",
-        description:
-            "The BEST Italian Wedding Soup! A delicious and hearty soup made with bite size herbed beef and pork meatballs, veggies and acini de pepe",
-        ingredients:
-            "1/2 lb Ground beef,1/2 lb Ground veal,1/4 c Italian seasoned bread crumb,1 Egg,1 tb Parsley|Salt and pepper to taste|4 c Chicken broth|2 c Spinach leaves cut into piec,1/4 c Grated Pecorino Romano chees",
-        instructions:
-            "Combine the ground meat, bread crumbs, egg, parsley, salt and pepper in a bowl. Mix well and form into tiny meat balls. Bake on a cookie sheet for 30 minutes at 350F. Meanwhile, bring broth to a boil and add spinach. Cover and boil for 5 minutes. Add the meatballs to the hot broth, bring to a simmer. Stir in the cheese and serve immediately. Rita in Scottsdale 01/02/92 01:41 am",
-    };
+    const navigate = useNavigate();
+    const params = useParams();
+    const [recipes, setrecipes] = useContext(Recipecontext);
+    const recipe = recipes.find((r) => r.id == params.id);
 
     const DeleteHandler = () => {
-        console.log("Delete Recipe");
+        setrecipes(recipes.filter((r) => r.id != params.id));
+        localStorage.setItem(
+            "recipes",
+            JSON.stringify(recipes.filter((r) => r.id != params.id))
+        );
+        toast.success("Recipe Deleted Successfully!");
+        navigate("/recipes");
     };
 
     return recipe ? (
@@ -29,7 +31,7 @@ const Details = () => {
                     <p className="text-zinc-400">{recipe.description}</p>
                     <div className="flex justify-between py-10 px-5">
                         <Link
-                            to={`/update-recipe/1`}
+                            to={`/update-recipe/${params.id}`}
                             className="text-blue-400 border-blue-400 border py-2 px-5"
                         >
                             Update

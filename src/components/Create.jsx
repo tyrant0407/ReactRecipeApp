@@ -1,14 +1,12 @@
 import { nanoid } from "nanoid";
 import React, { useContext, useState } from "react";
+import { Recipecontext } from "../contexts/RecipeContext";
 import { toast } from "react-toastify";
-import { recipecontext } from "../contexts/RecipeContext";
 import { useNavigate } from "react-router-dom";
 
 const Create = () => {
-    
-    const navigate = useNavigate();
-     
-   const [recipes,setrecipes] = useContext(recipecontext)
+    const navigate = useNavigate()
+    const [recipes, setrecipes] = useContext(Recipecontext);
 
     const [image, setimage] = useState("");
     const [title, settitle] = useState("");
@@ -26,12 +24,14 @@ const Create = () => {
             ingredients,
             instructions,
         };
-        //code to validate the in put feild...
-        // console.log(newRecipe);
-        setrecipes([...recipes , newRecipe]);
+        setrecipes([...recipes, newRecipe]);
 
-        toast.success("Recipe Created Successfully!")
-
+        // sets the data in the localStorge of the browser
+        localStorage.setItem(
+            "recipes",
+            JSON.stringify([...recipes, newRecipe])
+        );
+        toast.success("Recipe Created Successfully!");
         navigate('/recipes')
     };
     return (
